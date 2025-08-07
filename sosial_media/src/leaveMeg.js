@@ -11,7 +11,7 @@ async function putComment(req, res) {
   }
 
   if (!postID || !comment || comment.length > 150) {
-    return res.status(400).json({ error: '請提供貼文 ID，且留言字數不得為空或超過 150 字' });
+    return res.status(400).json({ error: '請提供貼文 ID,且留言字數不得為空或超過 150 字' });
   }
 
   try {

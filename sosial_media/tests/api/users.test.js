@@ -24,6 +24,8 @@ describe('(testdb)Test API: /users', function() {
         .end(function(err, res) {
           if (err) return done(err);
           console.log('print result:', JSON.parse(res.text));
+        
+
           done();
         });
     });
@@ -43,7 +45,7 @@ describe('(testdb)Test API: /users', function() {
         .send(member)
         .expect(200)  
         .expect(res => {
-          if (!res.body.user||!res.body.user.id){ throw new Error("缺少回傳 id");}
+          if (!res.body.userID){ throw new Error("缺少回傳 id");}
         })
         .end(function(err, res) {
           if (err) return done(err);

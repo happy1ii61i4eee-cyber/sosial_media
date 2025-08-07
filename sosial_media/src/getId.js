@@ -30,10 +30,10 @@ async function getID(req, res) {
     }
 
     res.status(200).json({
-      message: '登入成功',
-      user: {
-        id: user.id,
-      },
+    
+      userID: user.id,
+      message: '登入成功'
+      
     });
   } catch (err) {
     console.error('查詢失敗:', err.message);
