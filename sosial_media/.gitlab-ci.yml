@@ -1,0 +1,29 @@
+stages:
+  - test
+  - build
+  - publish
+  - delivery
+
+image: node:24.4.1-alpine3.22
+
+      - image
+    expire_in: 30 mins
+
+
+# 將映像檔發布到 GitLab Container Registry
+publish-image:
+  stage: publish
+  stage: delivery
+  image: docker:27.3.1
+  services:
+    - docker:27.3.1-dind
+  script:
+    - echo "Start publish docker image job..."
+    - docker load -i image/app.tar.gz
+    - docker tag $CI_PROJECT_NAME:$VERSION $CI_REGISTRY_IMAGE:$VERSION
+    - docker login -u $CI_REGISTRY_USER -p $CI_REGISTRY_PASSWORD $CI_REGISTRY
+    - docker push $CI_REGISTRY_IMAGE:$VERSION
+  after_script:
+    - docker logout
+  only:
+    - main
