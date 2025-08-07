@@ -13,7 +13,7 @@ services:
       PGTZ: Asia/Taipei             
      
     ports:
-      - "5432:5432"          # 開放給本機連線
+      - "5432:5432"         
 
   pgadmin:
     container_name: pgadmin
