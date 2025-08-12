@@ -19,17 +19,15 @@ install:
   stage: install
   image: node:20
   script:
-    - echo "Installing dependencies..."
+    - echo "Current directory:"
+    - pwd
+    - ls -al
     - npm install
 
 test:
   stage: test
   image: node:20
-  services:
-    - name: postgres:16.4
-      alias: postgres-db
   script:
     - echo "Waiting for PostgreSQL to be ready..."
     - sleep 5
     - npm run testapi
-    
