@@ -24,4 +24,3 @@ test:
     - echo "List files:"
     - ls -al
     - npm run testapi
-    
