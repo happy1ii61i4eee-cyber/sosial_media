@@ -9,10 +9,14 @@ install:
     - echo "Current directory:"
     - pwd
     - ls -al
+    - cd sosial_media
+    - ls -al
     - npm install
 
 test:
   stage: test
   image: node:20
   script:
+    - cd sosial_media
     - npm test
+    
