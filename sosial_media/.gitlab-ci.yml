@@ -6,17 +6,12 @@ install:
   stage: install
   image: node:20
   script:
-    - echo "Installing dependencies..."
+    - cd social_mediaplatform
     - npm install
 
 test:
   stage: test
   image: node:20
   script:
-    - echo "Current directory:"
-    - pwd            # 顯示當前工作目錄
-    - echo "List files:"
-    - ls -al         # 查看目錄下檔案
-    - npm install    # 安裝相依套件
-    - echo "Running tests..."
-    - npm run testapi
+    - cd social_mediaplatform
+    - npm test
