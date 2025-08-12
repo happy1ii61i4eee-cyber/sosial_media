@@ -6,10 +6,8 @@ install:
   stage: install
   image: node:20
   script:
-    - echo "Before cd:"
-    - ls -al
-    - cd sosial_media
-    - echo "After cd:"
+    - echo "Current directory:"
+    - pwd
     - ls -al
     - npm install
 
@@ -17,5 +15,4 @@ test:
   stage: test
   image: node:20
   script:
-    - cd sosial_media
-    - npm run testapi
+    - npm test
