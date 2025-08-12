@@ -7,6 +7,11 @@ install:
   image: node:20
   script:
     - echo "Installing dependencies..."
+    - pwd
+    - ls -al
+    - cd sosial_media
+    - ls -al
+    - cat package.json
     - npm install
 
 test:
@@ -14,9 +19,9 @@ test:
   image: node:20
   script:
     - echo "Current directory:"
-    - pwd            # 顯示當前工作目錄
+    - pwd
+    - cd sosial_media
     - echo "List files:"
-    - ls -al         # 查看目錄下檔案
-    - npm install    # 安裝相依套件
-    - echo "Running tests..."
+    - ls -al
     - npm run testapi
+    
