@@ -6,12 +6,21 @@ install:
   stage: install
   image: node:20
   script:
-    - cd social_mediaplatform
+    - echo "Installing dependencies..."
+    - pwd
+    - ls -al
+    - cd sosial_media
+    - ls -al
+    - cat package.json
     - npm install
 
 test:
   stage: test
   image: node:20
   script:
-    - cd social_mediaplatform
-    - npm test
+    - echo "Current directory:"
+    - pwd
+    - cd sosial_media
+    - echo "List files:"
+    - ls -al
+    - npm run testapi
