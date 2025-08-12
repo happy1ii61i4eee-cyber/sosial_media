@@ -19,15 +19,22 @@ install:
   stage: install
   image: node:20
   script:
-    - echo "Current directory:"
+    - echo "Before cd:"
     - pwd
     - ls -al
+    - cd $CI_PROJECT_DIR
+    - echo "After cd:"
+    - pwd
+    - ls -al
+    - git status
+    - cat package.json
     - npm install
 
 test:
   stage: test
   image: node:20
   script:
-    - echo "Waiting for PostgreSQL to be ready..."
+    - cd $CI_PROJECT_DIR
+    - echo "Waiting for PostgreSQL..."
     - sleep 5
     - npm run testapi
