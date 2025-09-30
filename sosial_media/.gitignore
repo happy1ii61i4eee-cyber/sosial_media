@@ -2,3 +2,4 @@ node_modules
 pgadmin-data/
 db-data/
 sessions/
+configs/

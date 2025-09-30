@@ -29,11 +29,10 @@ async function getID(req, res) {
       return res.status(401).json({ error: '密碼錯誤' });
     }
 
+    // ✅ 回傳 id 而非 userID
     res.status(200).json({
-    
-      userID: user.id,
+       userID: user.id,
       message: '登入成功'
-      
     });
   } catch (err) {
     console.error('查詢失敗:', err.message);
