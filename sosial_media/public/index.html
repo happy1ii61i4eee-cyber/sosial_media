@@ -1,0 +1,60 @@
+<!DOCTYPE html>
+<html lang="zh-TW">
+<head>
+  <meta charset="UTF-8">
+  <title>社交平台登入</title>
+  <link rel="stylesheet" href="stylesheets/style.css">
+</head>
+<body>
+  <h1>歡迎來到 Social Media 平台</h1>
+  
+  <form id="loginForm">
+    <label for="username">帳號：</label>
+    <input type="text" id="username" name="username" required>
+    <br><br>
+    <label for="password">密碼：</label>
+    <input type="password" id="password" name="password" required>
+    <br><br>
+    <button type="submit">登入</button>
+  </form>
+
+  <p id="message"></p>
+
+  <script>
+    document.getElementById("loginForm").addEventListener("submit", async function(e) {
+      e.preventDefault();
+
+      const username = document.getElementById("username").value;
+      const password = document.getElementById("password").value;
+
+      try {
+        // 🔹 呼叫登入 API（根據你之前的後端是 POST /members/Id）
+        const res = await fetch("/members/Id", {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({ username, password })
+        });
+
+        const data = await res.json();
+
+        if (res.ok && data.token) {
+          // ✅ 登入成功後，儲存 Token
+          localStorage.setItem("token", data.token);
+
+          document.getElementById("message").textContent = "登入成功，正在前往會員中心...";
+
+          // ✅ 跳轉到會員中心
+          setTimeout(() => {
+            window.location.href = "/profile.html";
+          }, 1000);
+        } else {
+          document.getElementById("message").textContent = data.error || "登入失敗，請檢查帳號或密碼";
+        }
+      } catch (err) {
+        console.error("伺服器連線錯誤", err);
+        document.getElementById("message").textContent = "伺服器連線錯誤";
+      }
+    });
+  </script>
+</body>
+</html>

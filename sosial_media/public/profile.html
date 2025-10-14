@@ -1,0 +1,147 @@
+<h1>會員中心</h1>
+
+<div id="userInfo"></div>
+
+<hr>
+
+<!-- 📝 新增貼文 -->
+<h2>發表新貼文</h2>
+<textarea id="newPostContent" rows="3" cols="50" placeholder="輸入貼文內容..."></textarea><br>
+<button id="postBtn">發佈貼文</button>
+
+<hr>
+
+<!-- 💬 查詢貼文 -->
+<h2>搜尋貼文</h2>
+<input type="text" id="searchUsername" placeholder="輸入會員帳號">
+<button id="searchBtn">搜尋</button>
+
+<hr>
+
+<!-- 🧾 顯示貼文與留言 -->
+<h2>貼文與留言</h2>
+<div id="postsContainer"></div>
+<button onclick="loadProfile()">🔄 重新整理</button>
+<button onclick="logout()">🚪 登出</button>
+
+<script>
+const token = localStorage.getItem('token');
+function logout() {
+  localStorage.removeItem('token');
+  window.location.href = '/login.html';
+}
+
+// 🧭 載入會員資料
+async function loadProfile() {
+  const res = await fetch('/members/profile', {
+    headers: { 'Authorization': 'Bearer ' + token }
+  });
+  const data = await res.json();
+
+  if (!res.ok) {
+    alert('登入逾時或權限失效，請重新登入');
+    window.location.href = '/login.html';
+    return;
+  }
+
+  const userInfo = document.getElementById('userInfo');
+  userInfo.innerHTML = `<p>歡迎, ${data.user.username}</p>
+                        <p>ID: ${data.user.id} ｜ 城市: ${data.user.city || '未填寫'}</p>`;
+  renderPosts(data.posts, data.comments);
+}
+
+// 📝 新增貼文
+document.getElementById('postBtn').addEventListener('click', async () => {
+  const content = document.getElementById('newPostContent').value.trim();
+  if (!content) return alert('請輸入內容');
+
+  const res = await fetch('/members/post', {
+    method: 'POST',
+    headers: { 
+      'Content-Type': 'application/json',
+      'Authorization': 'Bearer ' + token
+    },
+    body: JSON.stringify({ content })
+  });
+
+  const data = await res.json();
+  if (res.ok) {
+    alert('貼文成功！');
+    document.getElementById('newPostContent').value = '';
+    loadProfile(); // 重新載入貼文
+  } else {
+    alert(data.error || '貼文失敗');
+  }
+});
+
+// 💬 搜尋貼文
+document.getElementById('searchBtn').addEventListener('click', async () => {
+  const username = document.getElementById('searchUsername').value.trim();
+  if (!username) return alert('請輸入會員名稱');
+
+  const res = await fetch(`/members/searchPost?username=${username}`, {
+    headers: { 'Authorization': 'Bearer ' + token }
+  });
+  const data = await res.json();
+
+  if (res.ok) {
+    renderPosts(data.posts, data.comments);
+  } else {
+    alert(data.error || '查詢失敗');
+  }
+});
+
+// 💬 顯示貼文＋留言
+function renderPosts(posts, comments) {
+  const container = document.getElementById('postsContainer');
+  container.innerHTML = '';
+
+  posts.forEach(post => {
+    const postComments = comments.filter(c => c.post_id === post.id);
+    const commentHtml = postComments.map(c => `
+      <p>留言者: ${c.username}</p>
+      <p>${c.content}</p>
+    `).join('<hr>');
+
+    const postEl = document.createElement('div');
+    postEl.innerHTML = `
+      <p><strong>${post.username}</strong>：${post.content}</p>
+      <p>時間：${new Date(post.created_at).toLocaleString()}</p>
+      <div>${commentHtml || '<p>尚無留言</p>'}</div>
+      <textarea rows="2" placeholder="留言..." id="comment-${post.id}"></textarea>
+      <button onclick="addComment(${post.id})">送出留言</button>
+      <hr>
+    `;
+    container.appendChild(postEl);
+  });
+}
+
+// 💬 新增留言
+async function addComment(postID) {
+  const comment = document.getElementById(`comment-${postID}`).value.trim();
+  if (!comment) return alert('請輸入留言內容');
+
+  const res = await fetch('/members/post', {
+    method: 'PUT',
+    headers: { 
+      'Content-Type': 'application/json',
+      'Authorization': 'Bearer ' + token
+    },
+    body: JSON.stringify({ postID, comment })
+  });
+
+  const data = await res.json();
+  if (res.ok) {
+    alert('留言成功！');
+    loadProfile();
+  } else {
+    alert(data.error || '留言失敗');
+  }
+}
+
+
+
+
+
+loadProfile();
+</script>
