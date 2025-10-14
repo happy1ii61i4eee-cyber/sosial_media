@@ -2,6 +2,7 @@ const postgres = require('postgres');
 const pgConfig = require('../configs/postgres');
 const sql = postgres(pgConfig);
 const bcrypt = require('bcrypt');
+const jwt = require('jsonwebtoken');
 
 async function getID(req, res) {
   const { username, password } = req.body;
@@ -24,14 +25,22 @@ async function getID(req, res) {
 
     // 使用 bcrypt 比對密碼
     const isMatch = await bcrypt.compare(password, user.password);
-
     if (!isMatch) {
       return res.status(401).json({ error: '密碼錯誤' });
     }
 
-    // ✅ 回傳 id 而非 userID
+    // ✅ 登入成功後才簽發 token
+    const token = jwt.sign(
+      { id: user.id, username: user.username },  // Payload
+      process.env.JWT_SECRET || 'mysecret',     // 秘鑰
+      { expiresIn: '1h' }                       // 有效期
+    );
+
+    // 回傳 token 與使用者資訊
     res.status(200).json({
-       userID: user.id,
+      token,
+      userID: user.id,
+      username: user.username,
       message: '登入成功'
     });
   } catch (err) {

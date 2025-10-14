@@ -3,3 +3,4 @@ pgadmin-data/
 db-data/
 sessions/
 configs/
+.env

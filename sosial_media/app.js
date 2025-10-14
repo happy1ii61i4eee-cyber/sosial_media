@@ -31,6 +31,7 @@ app.use(express.static(path.join(__dirname, 'public')));
 // 路由綁定
 app.use('/', indexRouter);
 app.use('/members', usersRouter); 
+app.use('/members/profile', require('./src/profile'));
 
 
 // catch 404 and forward to error handler
