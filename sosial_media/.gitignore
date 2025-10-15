@@ -4,3 +4,5 @@ db-data/
 sessions/
 configs/
 .env
+docker-compose.yaml
+
